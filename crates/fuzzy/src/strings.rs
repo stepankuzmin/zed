@@ -151,7 +151,12 @@ where
                 string: candidate.borrow().string.clone(),
             })
             .collect();
-        results.sort_by(|a, b| b.cmp(a));
+        results.sort_by(|a, b| {
+            b.score
+                .partial_cmp(&a.score)
+                .unwrap_or(Ordering::Equal)
+                .then_with(|| a.string.cmp(&b.string))
+        });
         return results;
     }
 
